@@ -296,22 +296,24 @@ class _StartQuizPageState extends State<StartQuizPage> {
                       final int? id = data.id;
                       final int correct = data.correctAnswerIndex;
                       var questionLength = question.length;
+                      int isSelected = -1;
                       return Column(
                         children: [
+                          SizedBox(height: 20.0),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // for question counter
                               Center(
-                                  child: Text(
-                                    "Question ${index + 1}/${listData.length}",
-                                    style: const TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                child: Text(
+                                  "Question ${index + 1}/${listData.length}",
+                                  style: const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  ),
+                                ),
+                              ),
                               // for questions
                               Container(
                                 alignment: Alignment.center,
@@ -333,10 +335,45 @@ class _StartQuizPageState extends State<StartQuizPage> {
                             ],
                           ),
                           // for answers
+                          // Column(
+                          //   children: answers.map(
+                          //     (e) {
+                          //       return Container(
+                          //         width: double.infinity,
+                          //         margin:
+                          //             const EdgeInsets.symmetric(vertical: 8),
+                          //         height: 48,
+                          //         child: ElevatedButton(
+                          //           child: Text(e,
+                          //               style: TextStyle(
+                          //                   color: isSelected == index
+                          //                       ? Colors.white
+                          //                       : Colors.black,
+                          //                   fontSize: 18.0)),
+                          //           style: ElevatedButton.styleFrom(
+                          //               shape: StadiumBorder(
+                          //                   side: BorderSide(
+                          //                       color: isSelected == index
+                          //                           ? Colors.white
+                          //                           : Colors.teal)),
+                          //               backgroundColor: isSelected == index
+                          //                   ? Colors.teal
+                          //                   : Colors.white),
+                          //           onPressed: () {
+                          //             setState(() {
+                          //               int isSelected = -1;
+                          //               isSelected == index++;
+                          //               print(isSelected);
+                          //             });
+                          //           },
+                          //         ),
+                          //       );
+                          //     },
+                          //   ).toList(),
+                          // ),
                           Column(
                             children: answers.map(
                                   (e) {
-                                bool isSelected = false;
                                 return Container(
                                   width: double.infinity,
                                   margin: const EdgeInsets.symmetric(vertical: 8),
@@ -344,61 +381,47 @@ class _StartQuizPageState extends State<StartQuizPage> {
                                   child: ElevatedButton(
                                     child: Text(e,
                                         style: TextStyle(
-                                            color: isSelected ? Colors.white : Colors.black,
+                                            color: isSelected == index ? Colors.white : Colors.black,
                                             fontSize: 18.0)),
                                     style: ElevatedButton.styleFrom(
                                         shape: StadiumBorder(
                                             side: BorderSide(
-                                                color: isSelected ? Colors.white : Colors.teal)),
-                                        backgroundColor: isSelected ? Colors.teal : Colors.white),
+                                                color: isSelected == 1 ? Colors.white : Colors.teal)),
+                                        backgroundColor: isSelected == 1 ? Colors.teal : Colors.white),
                                     onPressed: () {
-                                      if (isSelected != null) {
-                                        if (e.isNotEmpty) {
-                                          index++;
-                                        }
-                                        setState(() {
-                                          isSelected = true;
-                                        });
-                                      }
+                                      setState(() {
+                                        isSelected = 1;
+                                        print(isSelected = 1);
+                                      });
                                     },
                                   ),
                                 );
                               },
                             ).toList(),
                           ),
+
+                          SizedBox(height: 30.0),
                         ],
                       );
                     }),
               ),
               Expanded(
-                child: _nextButton(),
+                child: _submitButton(),
               )
             ])));
   }
 
-  _nextButton() {
-    bool isLastQuestion = false;
-    // if (currentQuestionIndex == quizList.length - 1) {
-    //   isLastQuestion = true;
-    // }
+  _submitButton() {
     return Container(
       width: MediaQuery.of(context).size.width * 0.5,
       height: 48,
       child: ElevatedButton(
-        child: Text(isLastQuestion ? "Submit" : "Next",
-            style: TextStyle(color: Colors.white, fontSize: 18.0)),
-        style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(), backgroundColor: Colors.teal),
-        onPressed: () {
-          if (isLastQuestion) {
-            showDialog(context: context, builder: (_) => _showScoreDialog());
-          } else {
-            setState(() {
-              // currentQuestionIndex++;
-            });
-          }
-        },
-      ),
+          child: Text("Submit",
+              style: TextStyle(color: Colors.white, fontSize: 18.0)),
+          style: ElevatedButton.styleFrom(
+              shape: const StadiumBorder(), backgroundColor: Colors.teal),
+          onPressed: () =>
+              showDialog(context: context, builder: (_) => _showScoreDialog())),
     );
   }
 

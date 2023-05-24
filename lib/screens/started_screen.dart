@@ -29,8 +29,8 @@ class StartedPage extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 35.0)),
                   backgroundColor: Colors.red,
                 ),
-                accountName: Text("Khaleel Mahdi"),
-                accountEmail: Text("20202080")),
+                accountName: Text("Hello World"),
+                accountEmail: Text("20")),
             ListTile(
               onTap: () => navTo(context, ShowQuestions()),
               leading: Icon(CupertinoIcons.pen, color: Colors.black87),
