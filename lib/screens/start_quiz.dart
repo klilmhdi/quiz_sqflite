@@ -334,43 +334,6 @@ class _StartQuizPageState extends State<StartQuizPage> {
                               )
                             ],
                           ),
-                          // Column(
-                          //   children: answers.asMap().entries.map(
-                          //         (entry) {
-                          //       int index = entry.key;
-                          //       String answer = entry.value;
-                          //       return Container(
-                          //         width: double.infinity,
-                          //         margin: const EdgeInsets.symmetric(vertical: 8),
-                          //         height: 48,
-                          //         child: ElevatedButton(
-                          //           child: Text(
-                          //             answer,
-                          //             style: TextStyle(
-                          //               color: isSelected > -1 ? Colors.white : Colors.black,
-                          //               fontSize: 18.0,
-                          //             ),
-                          //           ),
-                          //           style: ElevatedButton.styleFrom(
-                          //             shape: StadiumBorder(
-                          //               side: BorderSide(
-                          //                 color: isSelected > -1 ? Colors.white : Colors.teal,
-                          //               ),
-                          //             ),
-                          //             backgroundColor:
-                          //             isSelected > -1 ? Colors.teal : Colors.white,
-                          //           ),
-                          //           onPressed: () {
-                          //             setState(() {
-                          //               isSelected = index;
-                          //               print(isSelected);
-                          //             });
-                          //           },
-                          //         ),
-                          //       );
-                          //     },
-                          //   ).toList(),
-                          // ),
                           Column(
                             children: answers.asMap().entries.map(
                                   (MapEntry<int, String> entry) {
@@ -384,21 +347,22 @@ class _StartQuizPageState extends State<StartQuizPage> {
                                     child: Text(
                                       e,
                                       style: TextStyle(
-                                        color: isSelected == index ? Colors.white : Colors.black,
+                                        color: isSelected < -1 ? Colors.white : Colors.black,
                                         fontSize: 18.0,
                                       ),
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       shape: StadiumBorder(
                                         side: BorderSide(
-                                          color: isSelected == index ? Colors.white : Colors.teal,
+                                          color: isSelected < -1 ? Colors.white : Colors.teal,
                                         ),
                                       ),
-                                      backgroundColor: isSelected == index ? Colors.teal : Colors.white,
+                                      backgroundColor: isSelected < -1 ? Colors.teal : Colors.white,
                                     ),
                                     onPressed: () {
                                       setState(() {
                                         isSelected = index;
+                                        score++;
                                         print(isSelected);
                                       });
                                     },
@@ -413,84 +377,77 @@ class _StartQuizPageState extends State<StartQuizPage> {
                     }),
               ),
               Expanded(
-                child: _submitButton(),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 48,
+                  child: ElevatedButton(
+                      child: Text("Submit",
+                          style: TextStyle(color: Colors.white, fontSize: 18.0)),
+                      style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(), backgroundColor: Colors.teal),
+                      onPressed: () =>
+                          showDialog(context: context, builder: (_) {
+                            bool isPassed = false;
+                            if (score >= listData.length * 0.5) {
+                              isPassed = true;
+                            }
+                            String title = isPassed ? "Passed " : "Failed";
+
+                            return AlertDialog(
+                              // title:
+                              title: Center(
+                                  child: Text(isPassed ? "Congratulations!" : "Oops!",
+                                      style: TextStyle(color: Colors.teal, fontSize: 25.0))),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  isPassed
+                                      ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: Image.asset("assets/images/result.jpg"))
+                                      : Image.asset("assets/images/fail.png"),
+                                  SizedBox(height: 10.0),
+                                  Text(
+                                    "Your Score : $score / ${listData.length}",
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0),
+                                  ),
+                                  SizedBox(height: 15.0),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor: MaterialStatePropertyAll(Colors.teal)),
+                                        child: const Text("Restart",
+                                            style: TextStyle(color: Colors.white, fontSize: 16.0)),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          // setState(() {
+                                          //   currentQuestionIndex = 0;
+                                          //   score = 0;
+                                          //   selectedAnswer = null;
+                                          // });
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor: MaterialStatePropertyAll(Colors.teal)),
+                                        child: const Text("Go back to home",
+                                            style: TextStyle(color: Colors.white, fontSize: 16.0)),
+                                        onPressed: () => navAndFinish(context, StartedPage()),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          })),
+                ),
               )
             ])));
-  }
-
-  _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.5,
-      height: 48,
-      child: ElevatedButton(
-          child: Text("Submit",
-              style: TextStyle(color: Colors.white, fontSize: 18.0)),
-          style: ElevatedButton.styleFrom(
-              shape: const StadiumBorder(), backgroundColor: Colors.teal),
-          onPressed: () =>
-              showDialog(context: context, builder: (_) => _showScoreDialog())),
-    );
-  }
-
-  _showScoreDialog() {
-    bool isPassed = false;
-
-    // if (score >= quizList.length * 0.5) {
-    //   isPassed = true;
-    // }
-    String title = isPassed ? "Passed " : "Failed";
-
-    return AlertDialog(
-      // title:
-      title: Center(
-          child: Text(isPassed ? "Congratulations!" : "Oops!",
-              style: TextStyle(color: Colors.teal, fontSize: 25.0))),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          isPassed
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  child: Image.asset("assets/images/result.jpg"))
-              : Image.asset("assets/images/fail.png"),
-          SizedBox(height: 10.0),
-          // Text(
-          //   "Your Score : $score / ${quizList.length}",
-          //   style: TextStyle(
-          //       color: Colors.green,
-          //       fontWeight: FontWeight.bold,
-          //       fontSize: 20.0),
-          // ),
-          SizedBox(height: 15.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.teal)),
-                child: const Text("Restart",
-                    style: TextStyle(color: Colors.white, fontSize: 16.0)),
-                onPressed: () {
-                  Navigator.pop(context);
-                  // setState(() {
-                  //   currentQuestionIndex = 0;
-                  //   score = 0;
-                  //   selectedAnswer = null;
-                  // });
-                },
-              ),
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.teal)),
-                child: const Text("Go back to home",
-                    style: TextStyle(color: Colors.white, fontSize: 16.0)),
-                onPressed: () => navAndFinish(context, StartedPage()),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
   }
 }
