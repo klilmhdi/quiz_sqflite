@@ -334,35 +334,35 @@ class _StartQuizPageState extends State<StartQuizPage> {
                               )
                             ],
                           ),
-                          // for answers
                           // Column(
-                          //   children: answers.map(
-                          //     (e) {
+                          //   children: answers.asMap().entries.map(
+                          //         (entry) {
+                          //       int index = entry.key;
+                          //       String answer = entry.value;
                           //       return Container(
                           //         width: double.infinity,
-                          //         margin:
-                          //             const EdgeInsets.symmetric(vertical: 8),
+                          //         margin: const EdgeInsets.symmetric(vertical: 8),
                           //         height: 48,
                           //         child: ElevatedButton(
-                          //           child: Text(e,
-                          //               style: TextStyle(
-                          //                   color: isSelected == index
-                          //                       ? Colors.white
-                          //                       : Colors.black,
-                          //                   fontSize: 18.0)),
+                          //           child: Text(
+                          //             answer,
+                          //             style: TextStyle(
+                          //               color: isSelected > -1 ? Colors.white : Colors.black,
+                          //               fontSize: 18.0,
+                          //             ),
+                          //           ),
                           //           style: ElevatedButton.styleFrom(
-                          //               shape: StadiumBorder(
-                          //                   side: BorderSide(
-                          //                       color: isSelected == index
-                          //                           ? Colors.white
-                          //                           : Colors.teal)),
-                          //               backgroundColor: isSelected == index
-                          //                   ? Colors.teal
-                          //                   : Colors.white),
+                          //             shape: StadiumBorder(
+                          //               side: BorderSide(
+                          //                 color: isSelected > -1 ? Colors.white : Colors.teal,
+                          //               ),
+                          //             ),
+                          //             backgroundColor:
+                          //             isSelected > -1 ? Colors.teal : Colors.white,
+                          //           ),
                           //           onPressed: () {
                           //             setState(() {
-                          //               int isSelected = -1;
-                          //               isSelected == index++;
+                          //               isSelected = index;
                           //               print(isSelected);
                           //             });
                           //           },
@@ -372,26 +372,34 @@ class _StartQuizPageState extends State<StartQuizPage> {
                           //   ).toList(),
                           // ),
                           Column(
-                            children: answers.map(
-                                  (e) {
+                            children: answers.asMap().entries.map(
+                                  (MapEntry<int, String> entry) {
+                                int index = entry.key;
+                                String e = entry.value;
                                 return Container(
                                   width: double.infinity,
                                   margin: const EdgeInsets.symmetric(vertical: 8),
                                   height: 48,
                                   child: ElevatedButton(
-                                    child: Text(e,
-                                        style: TextStyle(
-                                            color: isSelected == index ? Colors.white : Colors.black,
-                                            fontSize: 18.0)),
+                                    child: Text(
+                                      e,
+                                      style: TextStyle(
+                                        color: isSelected == index ? Colors.white : Colors.black,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
                                     style: ElevatedButton.styleFrom(
-                                        shape: StadiumBorder(
-                                            side: BorderSide(
-                                                color: isSelected == 1 ? Colors.white : Colors.teal)),
-                                        backgroundColor: isSelected == 1 ? Colors.teal : Colors.white),
+                                      shape: StadiumBorder(
+                                        side: BorderSide(
+                                          color: isSelected == index ? Colors.white : Colors.teal,
+                                        ),
+                                      ),
+                                      backgroundColor: isSelected == index ? Colors.teal : Colors.white,
+                                    ),
                                     onPressed: () {
                                       setState(() {
-                                        isSelected = 1;
-                                        print(isSelected = 1);
+                                        isSelected = index;
+                                        print(isSelected);
                                       });
                                     },
                                   ),
@@ -399,7 +407,6 @@ class _StartQuizPageState extends State<StartQuizPage> {
                               },
                             ).toList(),
                           ),
-
                           SizedBox(height: 30.0),
                         ],
                       );
