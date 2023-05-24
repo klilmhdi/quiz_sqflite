@@ -1,15 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_sqflite/functions.dart';
+import 'package:quiz_sqflite/model/model.dart';
 import 'package:quiz_sqflite/screens/create_quiz.dart';
 import 'package:quiz_sqflite/screens/show_questions.dart';
 import 'package:quiz_sqflite/screens/start_quiz.dart';
+import 'package:quiz_sqflite/sqflite_option.dart';
 
-class StartedPage extends StatelessWidget {
+class StartedPage extends StatefulWidget {
   const StartedPage({Key? key}) : super(key: key);
 
   @override
+  State<StartedPage> createState() => _StartedPageState();
+}
+
+class _StartedPageState extends State<StartedPage> {
+  Future<List<QuizModel>> getQuestion() async =>
+      await SqliteServiceFunctions().getQuestions();
+
+  List<QuizModel> listData = [];
+  Future<void> getListData() async {
+    final result = await getQuestion();
+    listData = [];
+    listData.addAll(result);
+    setState(() {});
+  }
+  @override
   Widget build(BuildContext context) {
+    getListData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
@@ -74,7 +92,43 @@ class StartedPage extends StatelessWidget {
               width: 240.0,
               height: 60.0,
               child: ElevatedButton(
-                  onPressed: () => navTo(context, StartQuizPage()),
+                  onPressed: () => listData.length < 5 ? showDialog(
+                    // title:
+                    context: context ,
+                    builder: (context) => Center(
+                      child: Container(
+                        height: 150.0,
+                        width: 260.0,
+                        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20.0)),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                                  child: Text("You should add more than 4 questions",
+                                      style: TextStyle(color: Colors.teal, fontSize: 25.0)),
+                                )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(Colors.teal)),
+                                  child: const Text("Add question",
+                                      style: TextStyle(color: Colors.white, fontSize: 16.0)),
+                                  onPressed: () => navTo(context, CreateQuiz()),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ) : navTo(context, StartQuizPage()),
                   style: ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll(Colors.teal),
                   ),

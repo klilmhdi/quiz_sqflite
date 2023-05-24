@@ -254,6 +254,7 @@ class _StartQuizPageState extends State<StartQuizPage> {
       await SqliteServiceFunctions().getQuestions();
 
   int score = 0;
+  int isSelected = -1;
   List<QuizModel> listData = [];
 
   Future<void> getListData() async {
@@ -296,7 +297,6 @@ class _StartQuizPageState extends State<StartQuizPage> {
                       final int? id = data.id;
                       final int correct = data.correctAnswerIndex;
                       var questionLength = question.length;
-                      int isSelected = -1;
                       return Column(
                         children: [
                           SizedBox(height: 20.0),
@@ -426,11 +426,10 @@ class _StartQuizPageState extends State<StartQuizPage> {
                                             style: TextStyle(color: Colors.white, fontSize: 16.0)),
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          // setState(() {
-                                          //   currentQuestionIndex = 0;
-                                          //   score = 0;
-                                          //   selectedAnswer = null;
-                                          // });
+                                          setState(() {
+                                            score = 0;
+                                            isSelected = -1;
+                                          });
                                         },
                                       ),
                                       ElevatedButton(
